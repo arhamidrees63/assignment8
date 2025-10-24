@@ -31,19 +31,20 @@ def test_calculator_add(page, fastapi_server):
     """
     # Navigate the browser to the homepage URL of the FastAPI application.
     page.goto('http://localhost:8000')
-    
-    # Fill in the first number input field (with id 'a') with the value '10'.
+
+    # Fill in the input fields with test values.
     page.fill('#a', '10')
-    
-    # Fill in the second number input field (with id 'b') with the value '5'.
     page.fill('#b', '5')
-    
-    # Click the button that has the exact text "Add". This triggers the addition operation.
+
+    # Click the "Add" button to perform the addition.
     page.click('button:text("Add")')
-    
-    # Use an assertion to check that the text within the result div (with id 'result') is exactly "Result: 15".
-    # This verifies that the addition operation was performed correctly and the result is displayed as expected.
+
+    # ✅ Wait until the result text appears and contains "Calculation Result"
+    page.wait_for_function("document.querySelector('#result').innerText.includes('Calculation Result')")
+
+    # ✅ Assert the correct text after the page updates
     assert page.inner_text('#result') == 'Calculation Result: 15'
+
 
 @pytest.mark.e2e
 def test_calculator_divide_by_zero(page, fastapi_server):

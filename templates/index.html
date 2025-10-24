@@ -279,26 +279,14 @@
                 console.log('Response Data:', data);
                 
                 if (response.ok) {
-                    /*
-                        Successful Response Handling
-                    
-                        - response.ok: A boolean indicating whether the HTTP status code is in the range 200-299,
-                          which means the request was successful.
-                          
-                        - resultElement.innerText: Updates the text inside the result <div> to display the result.
-                    */
-                    resultElement.innerText = 'Calculation Result: ' + data.result;
-                } else {
-                    /*
-                        Error Response Handling
-                    
-                        - If the response is not successful, it is expected to contain an 'error' field with
-                          a descriptive message.
-                          
-                        - resultElement.innerText: Updates the text inside the result <div> to display the error message.
-                    */
-                    resultElement.innerText = 'Error: ' + data.error;
-                }
+    // ✅ Ensure text updates immediately and matches test expectation
+    resultElement.innerText = 'Calculation Result: ' + data.result;
+
+    // ✅ Force DOM update before Playwright reads it (fixes timing issue)
+    await new Promise(requestAnimationFrame);
+} else {
+    resultElement.innerText = 'Error: ' + (data.error || 'Unknown error');
+}
             } catch (error) {
                 /*
                     Catch Block: Handling Network or Unexpected Errors
